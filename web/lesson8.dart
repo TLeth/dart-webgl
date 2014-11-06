@@ -29,12 +29,9 @@ class Lesson8 extends Lesson {
     loadTexture('glass.gif', handleMipMapTexture).then((t) => texture = t);
 
     var attributes = ['aVertexPosition', 'aVertexNormal', 'aTextureCoord'];
-    var uniforms = ['uPMatrix', 'uMVMatrix', 'uNMatrix', 'uSampler',
-                    'uAmbientColor', 'uLightingDirection', 'uDirectionalColor',
-                    'uUseLighting', 'uAlpha'];
+    var uniforms = ['uPMatrix', 'uMVMatrix', 'uNMatrix', 'uSampler', 'uAmbientColor', 'uLightingDirection', 'uDirectionalColor', 'uUseLighting', 'uAlpha'];
 
-    program = new GlProgram(
-        '''
+    program = new GlProgram('''
           precision mediump float;
 
           varying vec2 vTextureCoord;
@@ -48,8 +45,7 @@ class Lesson8 extends Lesson {
               vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
               gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a * uAlpha);
           }
-        ''',
-        '''
+        ''', '''
           attribute vec3 aVertexPosition;
           attribute vec3 aVertexNormal;
           attribute vec2 aTextureCoord;
@@ -117,9 +113,10 @@ class Lesson8 extends Lesson {
     // First stash the current model view matrix before we start moving around.
     mvPushMatrix();
 
-    mvMatrix..translate([0.0, 0.0, z])..
-        rotateX(radians(xRot))..
-        rotateY(radians(yRot));
+    mvMatrix
+        ..translate([0.0, 0.0, z])
+        ..rotateX(radians(xRot))
+        ..rotateY(radians(yRot));
 
     if (_blending.checked) {
       gl.blendFunc(SRC_ALPHA, ONE);
@@ -133,33 +130,29 @@ class Lesson8 extends Lesson {
 
     gl.uniform1i(uUseLighting, _lighting.checked ? 1 : 0);
     if (_lighting.checked) {
-      gl.uniform3f(uAmbientColor, double.parse(_aR.value),
-          double.parse(_aG.value), double.parse(_aB.value));
+      gl.uniform3f(uAmbientColor, double.parse(_aR.value), double.parse(_aG.value), double.parse(_aB.value));
 
       // Take the lighting point and normalize / reverse it.
-      Vector3 direction = new Vector3(double.parse(_ldX.value),
-          double.parse(_ldY.value), double.parse(_ldZ.value));
+      Vector3 direction = new Vector3(double.parse(_ldX.value), double.parse(_ldY.value), double.parse(_ldZ.value));
       direction = direction.normalize().scale(-1.0);
       gl.uniform3fv(uLightingDirection, direction.buf);
 
-      gl.uniform3f(uDirectionalColor, double.parse(_dR.value),
-          double.parse(_dG.value), double.parse(_dB.value));
+      gl.uniform3f(uDirectionalColor, double.parse(_dR.value), double.parse(_dG.value), double.parse(_dB.value));
     }
 
     gl.activeTexture(TEXTURE0);
     gl.bindTexture(TEXTURE_2D, texture);
     gl.uniform1i(uSampler, 0);
 
-    cube.draw(setUniforms: setMatrixUniforms,
-        vertex: program.attributes['aVertexPosition'],
-        coord: program.attributes['aTextureCoord'],
-        normal: program.attributes['aVertexNormal']);
+    cube.draw(setUniforms: setMatrixUniforms, vertex: program.attributes['aVertexPosition'], coord: program.attributes['aTextureCoord'], normal: program.attributes['aVertexNormal']);
 
     mvPopMatrix();
   }
 
-  num xSpeed = 3.0, ySpeed = -3.0;
-  num xRot = 0.0, yRot = 0.0;
+  num xSpeed = 3.0;
+  num ySpeed = -3.0;
+  num xRot = 0.0;
+  num yRot = 0.0;
   num z = -5.0;
 
   void animate(num now) {
@@ -173,11 +166,7 @@ class Lesson8 extends Lesson {
   }
 
   void handleKeys() {
-    handleDirection(
-        up: () => ySpeed -= 1.0,
-        down: () => ySpeed += 1.0,
-        left: () => xSpeed -= 1.0,
-        right: () => xSpeed += 1.0);
+    handleDirection(up: () => ySpeed -= 1.0, down: () => ySpeed += 1.0, left: () => xSpeed -= 1.0, right: () => xSpeed += 1.0);
     if (isActive(KeyCode.PAGE_UP)) {
       z -= 0.05;
     }
@@ -187,13 +176,27 @@ class Lesson8 extends Lesson {
   }
 
   // Lighting enabled / Ambient color
-  InputElement _lighting, _aR, _aG, _aB;
+  InputElement _lighting;
+  // Lighting enabled / Ambient color
+  InputElement _aR;
+  // Lighting enabled / Ambient color
+  InputElement _aG;
+  // Lighting enabled / Ambient color
+  InputElement _aB;
 
   // Light position
-  InputElement _ldX, _ldY, _ldZ;
+  InputElement _ldX;
+  // Light position
+  InputElement _ldY;
+  // Light position
+  InputElement _ldZ;
 
   // Directional light color
-  InputElement _dR, _dG, _dB;
+  InputElement _dR;
+  // Directional light color
+  InputElement _dG;
+  // Directional light color
+  InputElement _dB;
 
   InputElement _blending, _alpha;
 

@@ -27,8 +27,10 @@ part of learn_gl;
  */
 class JsonObject implements Renderable {
 
-  Buffer vertexNormalBuffer, textureCoordBuffer,
-    vertexPositionBuffer, indexBuffer;
+  Buffer vertexNormalBuffer;
+  Buffer textureCoordBuffer;
+  Buffer vertexPositionBuffer;
+  Buffer indexBuffer;
   int _itemSize;
 
   bool strip = false;
@@ -38,8 +40,7 @@ class JsonObject implements Renderable {
 
     List<num> numArray = data['vertexNormals'];
     if (numArray != null) {
-      List<double> normals = new List<double>.
-          from(numArray.map((num index) => index.toDouble()));
+      List<double> normals = new List<double>.from(numArray.map((num index) => index.toDouble()));
 
       vertexNormalBuffer = gl.createBuffer();
       gl.bindBuffer(ARRAY_BUFFER, vertexNormalBuffer);
@@ -48,8 +49,7 @@ class JsonObject implements Renderable {
 
     numArray = data['vertexTextureCoords'];
     if (numArray != null) {
-      List<double> coords = new List<double>.
-          from(numArray.map((num index) => index.toDouble()));
+      List<double> coords = new List<double>.from(numArray.map((num index) => index.toDouble()));
 
       textureCoordBuffer = gl.createBuffer();
       gl.bindBuffer(ARRAY_BUFFER, textureCoordBuffer);
@@ -57,8 +57,7 @@ class JsonObject implements Renderable {
     }
 
     numArray = data['vertexPositions'];
-    List<double> positions = new List<double>.
-        from(numArray.map((num index) => index.toDouble()));
+    List<double> positions = new List<double>.from(numArray.map((num index) => index.toDouble()));
 
     vertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(ARRAY_BUFFER, vertexPositionBuffer);
@@ -66,8 +65,7 @@ class JsonObject implements Renderable {
 
     numArray = data['indices'];
     if (numArray != null) {
-      List<int> indices = new List<int>.
-          from(numArray.map((num index) => index.toInt()));
+      List<int> indices = new List<int>.from(numArray.map((num index) => index.toInt()));
       indexBuffer = gl.createBuffer();
       gl.bindBuffer(ELEMENT_ARRAY_BUFFER, indexBuffer);
       gl.bufferDataTyped(ELEMENT_ARRAY_BUFFER, new Uint16List.fromList(indices), STATIC_DRAW);

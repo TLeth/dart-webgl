@@ -15,7 +15,9 @@
 part of learn_gl;
 
 class Pyramid implements Renderable {
-  Buffer positionBuffer, normalBuffer, textureCoordBuffer;
+  Buffer positionBuffer;
+  Buffer normalBuffer;
+  Buffer textureCoordBuffer;
   Buffer colorBuffer;
 
   Pyramid() {
@@ -24,102 +26,33 @@ class Pyramid implements Renderable {
     textureCoordBuffer = gl.createBuffer();
 
     gl.bindBuffer(ARRAY_BUFFER, positionBuffer);
-    var vertices = [
-      // Front face
-       0.0,  1.0,  0.0,
-      -1.0, -1.0,  1.0,
-       1.0, -1.0,  1.0,
-
-      // Right face
-       0.0,  1.0,  0.0,
-       1.0, -1.0,  1.0,
-       1.0, -1.0, -1.0,
-
-      // Back face
-       0.0,  1.0,  0.0,
-       1.0, -1.0, -1.0,
-      -1.0, -1.0, -1.0,
-
-      // Left face
-       0.0,  1.0,  0.0,
-      -1.0, -1.0, -1.0,
-      -1.0, -1.0,  1.0,
-
-      //  NOTE: Missing the bottom triangles :)
-      -1.0, -1.0, -1.0,
-      1.0, -1.0, -1.0,
-      1.0, -1.0,  1.0,
-      -1.0, -1.0, -1.0,
-      1.0, -1.0,  1.0,
-      -1.0, -1.0,  1.0,
-    ];
+    var vertices = [// Front face
+      0.0, 1.0, 0.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, // Right face
+      0.0, 1.0, 0.0, 1.0, -1.0, 1.0, 1.0, -1.0, -1.0, // Back face
+      0.0, 1.0, 0.0, 1.0, -1.0, -1.0, -1.0, -1.0, -1.0, // Left face
+      0.0, 1.0, 0.0, -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, //  NOTE: Missing the bottom triangles :)
+      -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0,];
     gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList(vertices), STATIC_DRAW);
 
     normalBuffer = gl.createBuffer();
     gl.bindBuffer(ARRAY_BUFFER, normalBuffer);
-    var vertexNormals = [
-      // Front face
-      0.0,0.4472135901451111,0.8944271802902222,
-      0.0,0.4472135901451111,0.8944271802902222,
-      0.0,0.4472135901451111,0.8944271802902222,
-
-      // Right face
-      0.8944271802902222,0.4472135901451111,0.0,
-      0.8944271802902222,0.4472135901451111,0.0,
-      0.8944271802902222,0.4472135901451111,0.0,
-
-      // Back face
-      0.0,0.4472135901451111,-0.8944271802902222,
-      0.0,0.4472135901451111,-0.8944271802902222,
-      0.0,0.4472135901451111,-0.8944271802902222,
-
-      // Left face
-      -0.8944271802902222,0.4472135901451111,0.0,
-      -0.8944271802902222,0.4472135901451111,0.0,
-      -0.8944271802902222,0.4472135901451111,0.0,
-
-      // Bottom face - non-triangle strip
-      0.0,-1.0,0.0,
-      0.0,-1.0,0.0,
-      0.0,-1.0,0.0,
-      0.0,-1.0,0.0,
-      0.0,-1.0,0.0,
-      0.0,-1.0,0.0
-    ];
+    var vertexNormals = [// Front face
+      0.0, 0.4472135901451111, 0.8944271802902222, 0.0, 0.4472135901451111, 0.8944271802902222, 0.0, 0.4472135901451111, 0.8944271802902222, // Right face
+      0.8944271802902222, 0.4472135901451111, 0.0, 0.8944271802902222, 0.4472135901451111, 0.0, 0.8944271802902222, 0.4472135901451111, 0.0, // Back face
+      0.0, 0.4472135901451111, -0.8944271802902222, 0.0, 0.4472135901451111, -0.8944271802902222, 0.0, 0.4472135901451111, -0.8944271802902222, // Left face
+      -0.8944271802902222, 0.4472135901451111, 0.0, -0.8944271802902222, 0.4472135901451111, 0.0, -0.8944271802902222, 0.4472135901451111, 0.0, // Bottom face - non-triangle strip
+      0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0];
     gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList(vertexNormals), STATIC_DRAW);
 
     // TODO: Come up with a better way to store color buffer vs texture buffer :)
     colorBuffer = gl.createBuffer();
     gl.bindBuffer(ARRAY_BUFFER, colorBuffer);
-    var colors = [
-      // Front face
-      1.0, 0.0, 0.0, 1.0,
-      0.0, 1.0, 0.0, 1.0,
-      0.0, 0.0, 1.0, 1.0,
-
-      // Right face
-      1.0, 0.0, 0.0, 1.0,
-      0.0, 0.0, 1.0, 1.0,
-      0.0, 1.0, 0.0, 1.0,
-
-      // Back face
-      1.0, 0.0, 0.0, 1.0,
-      0.0, 1.0, 0.0, 1.0,
-      0.0, 0.0, 1.0, 1.0,
-
-      // Left face
-      1.0, 0.0, 0.0, 1.0,
-      0.0, 0.0, 1.0, 1.0,
-      0.0, 1.0, 0.0, 1.0,
-
-      // Bottom face
-      0.0, 1.0, 0.0, 1.0,
-      0.0, 1.0, 0.0, 1.0,
-      0.0, 1.0, 0.0, 1.0,
-      0.0, 1.0, 0.0, 1.0,
-      0.0, 1.0, 0.0, 1.0,
-      0.0, 1.0, 0.0, 1.0
-    ];
+    var colors = [// Front face
+      1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, // Right face
+      1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, // Back face
+      1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, // Left face
+      1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 1.0, // Bottom face
+      0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0];
     gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList(colors), STATIC_DRAW);
 
     // Normal discovery from a list triangles

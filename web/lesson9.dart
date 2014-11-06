@@ -41,8 +41,7 @@ class Lesson9 extends Lesson {
 
     var attributes = ['aVertexPosition', 'aTextureCoord'];
     var uniforms = ['uMVMatrix', 'uPMatrix', 'uColor', 'uSampler'];
-    program = new GlProgram(
-        '''
+    program = new GlProgram('''
           precision mediump float;
 
           varying vec2 vTextureCoord;
@@ -55,8 +54,7 @@ class Lesson9 extends Lesson {
               vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
               gl_FragColor = textureColor * vec4(uColor, 1.0);
           }
-        ''',
-        '''
+        ''', '''
           attribute vec3 aVertexPosition;
           attribute vec2 aTextureCoord;
 
@@ -90,19 +88,16 @@ class Lesson9 extends Lesson {
     gl.disable(DEPTH_TEST);
     gl.enable(BLEND);
 
-    mvMatrix..translate([0.0, 0.0, zoom])..
-        rotateX(radians(tilt));
+    mvMatrix
+        ..translate([0.0, 0.0, zoom])
+        ..rotateX(radians(tilt));
 
     gl.activeTexture(TEXTURE0);
     gl.bindTexture(TEXTURE_2D, texture);
     gl.uniform1i(program.uniforms['uSampler'], 0);
 
     for (Star star in stars) {
-      star.draw(vertex: program.attributes['aVertexPosition'],
-          coord: program.attributes['aTextureCoord'],
-          color: program.uniforms['uColor'],
-          twinkle: _twinkle.checked,
-          tilt: tilt, spin: spin, setUniforms: setMatrixUniforms);
+      star.draw(vertex: program.attributes['aVertexPosition'], coord: program.attributes['aTextureCoord'], color: program.uniforms['uColor'], twinkle: _twinkle.checked, tilt: tilt, spin: spin, setUniforms: setMatrixUniforms);
     }
     mvPopMatrix();
   }
@@ -130,9 +125,7 @@ class Lesson9 extends Lesson {
   }
 
   void handleKeys() {
-    handleDirection(
-        up: () => tilt += 2.0,
-        down: () => tilt -= 2.0);
+    handleDirection(up: () => tilt += 2.0, down: () => tilt -= 2.0);
     if (isActive(KeyCode.PAGE_UP)) {
       zoom -= 0.1;
     }

@@ -25,7 +25,8 @@ class Lesson11 extends Lesson {
 
   Matrix4 _rotation = new Matrix4()..identity();
   bool _mouseDown = false;
-  var _lastMouseX, _lastMouseY;
+  var _lastMouseX;
+  var _lastMouseY;
 
   bool get isLoaded => moonTexture != null;
 
@@ -33,11 +34,8 @@ class Lesson11 extends Lesson {
     moon = new Sphere(lats: 30, lons: 30, radius: 2);
 
     var attributes = ['aVertexPosition', 'aVertexNormal', 'aTextureCoord'];
-    var uniforms = ['uSampler', 'uMVMatrix', 'uPMatrix', 'uNMatrix',
-                    'uAmbientColor', 'uLightingDirection', 'uDirectionalColor',
-                    'uUseLighting'];
-    program = new GlProgram(
-        '''
+    var uniforms = ['uSampler', 'uMVMatrix', 'uPMatrix', 'uNMatrix', 'uAmbientColor', 'uLightingDirection', 'uDirectionalColor', 'uUseLighting'];
+    program = new GlProgram('''
           precision mediump float;
 
           varying vec2 vTextureCoord;
@@ -49,8 +47,7 @@ class Lesson11 extends Lesson {
               vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
               gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a);
           }
-        ''',
-        '''
+        ''', '''
           attribute vec3 aVertexPosition;
           attribute vec3 aVertexNormal;
           attribute vec2 aTextureCoord;
@@ -103,9 +100,11 @@ class Lesson11 extends Lesson {
       var newX = event.client.x;
       var newY = event.client.y;
       var deltaX = newX - _lastMouseX;
-      Matrix4 newRot = new Matrix4()..identity()..rotateY(radians(deltaX/10));
+      Matrix4 newRot = new Matrix4()
+          ..identity()
+          ..rotateY(radians(deltaX / 10));
       var deltaY = newY - _lastMouseY;
-      newRot.rotateX(radians(deltaY/10));
+      newRot.rotateX(radians(deltaY / 10));
       _rotation = newRot * _rotation; // C = A * B, first operand = newRot.
       _lastMouseX = newX;
       _lastMouseY = newY;
@@ -139,30 +138,25 @@ class Lesson11 extends Lesson {
     bool lighting = _lighting.checked;
     gl.uniform1i(uUseLighting, lighting ? 1 : 0);
     if (lighting) {
-      gl.uniform3f(uAmbientColor,
-          double.parse(_aR.value), double.parse(_aG.value), double.parse(_aB.value));
+      gl.uniform3f(uAmbientColor, double.parse(_aR.value), double.parse(_aG.value), double.parse(_aB.value));
 
       // Take the lighting point and normalize / reverse it.
-      Vector3 direction = new Vector3(double.parse(_ldX.value),
-          double.parse(_ldY.value), double.parse(_ldZ.value));
+      Vector3 direction = new Vector3(double.parse(_ldX.value), double.parse(_ldY.value), double.parse(_ldZ.value));
       direction = direction.normalize().scale(-1.0);
       gl.uniform3fv(uLightingDirection, direction.buf);
 
-      gl.uniform3f(uDirectionalColor, double.parse(_dR.value),
-          double.parse(_dG.value), double.parse(_dB.value));
+      gl.uniform3f(uDirectionalColor, double.parse(_dR.value), double.parse(_dG.value), double.parse(_dB.value));
     }
 
     mvPushMatrix();
     // Setup the scene -20.0 away.
-    mvMatrix = mvMatrix..
-        translate([0.0, 0.0, -7.0]);
+    mvMatrix = mvMatrix..translate([0.0, 0.0, -7.0]);
     mvMatrix = mvMatrix * _rotation;
 
     gl.activeTexture(TEXTURE0);
     gl.bindTexture(TEXTURE_2D, moonTexture);
     gl.uniform1i(uSampler, 0);
-    moon.draw(vertex: aVertexPosition, normal: aVertexNormal,
-        coord: aTextureCoord, setUniforms: setMatrixUniforms);
+    moon.draw(vertex: aVertexPosition, normal: aVertexNormal, coord: aTextureCoord, setUniforms: setMatrixUniforms);
     mvPopMatrix();
   }
 
@@ -184,10 +178,20 @@ class Lesson11 extends Lesson {
   }
 
   // Lighting enabled / Ambient color
-  InputElement _lighting, _aR, _aG, _aB;
+  InputElement _lighting;
+  // Lighting enabled / Ambient color
+  InputElement _aR;
+  // Lighting enabled / Ambient color
+  InputElement _aG;
+  // Lighting enabled / Ambient color
+  InputElement _aB;
 
   // Light position
-  InputElement _ldX, _ldY, _ldZ;
+  InputElement _ldX;
+  // Light position
+  InputElement _ldY;
+  // Light position
+  InputElement _ldZ;
 
   // Point color
   InputElement _dR, _dG, _dB;

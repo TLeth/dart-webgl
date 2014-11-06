@@ -50,17 +50,16 @@ class Sphere implements Renderable {
 
         normals.addAll([x, y, z]);
         textureCoords.addAll([u, v]);
-        vertexPositions.addAll([radius*x, radius*y, radius*z]);
+        vertexPositions.addAll([radius * x, radius * y, radius * z]);
       }
     }
 
     // Step 2: Stich vertex positions together as a series of triangles.
     for (var lat = 0; lat < lats; lat++) {
-      for (var lon = 0 ; lon < lons; lon++) {
+      for (var lon = 0; lon < lons; lon++) {
         var first = (lat * (lons + 1)) + lon;
         var second = first + lons + 1;
-        indexData.addAll([first, second, first + 1, second, second + 1,
-                          first + 1]);
+        indexData.addAll([first, second, first + 1, second, second + 1, first + 1]);
       }
     }
     _indexBufferSize = indexData.length;

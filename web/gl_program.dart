@@ -23,10 +23,10 @@ class GlProgram {
   Map<String, UniformLocation> uniforms = new Map<String, UniformLocation>();
   Program program;
 
-  Shader fragShader, vertShader;
+  Shader fragShader;
+  Shader vertShader;
 
-  GlProgram(String fragSrc, String vertSrc, List<String> attributeNames,
-      List<String> uniformNames) {
+  GlProgram(String fragSrc, String vertSrc, List<String> attributeNames, List<String> uniformNames) {
     fragShader = gl.createShader(FRAGMENT_SHADER);
     gl.shaderSource(fragShader, fragSrc);
     gl.compileShader(fragShader);

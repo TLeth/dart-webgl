@@ -17,7 +17,9 @@ part of learn_gl;
 class Lesson14 extends Lesson {
 
   GlProgram currentProgram;
-  Texture earthTexture, galvanizedTexture, moonTexture;
+  Texture earthTexture;
+  Texture galvanizedTexture;
+  Texture moonTexture;
   JsonObject teapot;
 
   int texturesLoaded = 0;
@@ -33,14 +35,9 @@ class Lesson14 extends Lesson {
     });
 
     var attributes = ['aVertexPosition', 'aVertexNormal', 'aTextureCoord'];
-    var uniforms = ['uPMatrix', 'uMVMatrix', 'uNMatrix', 'uSampler',
-                    'uUseTextures', 'uUseLighting', 'uAmbientColor',
-                    'uPointLightingLocation', 'uPointLightingSpecularColor',
-                    'uPointLightingDiffuseColor', 'uMaterialShininess',
-                    'uShowSpecularHighlights'];
+    var uniforms = ['uPMatrix', 'uMVMatrix', 'uNMatrix', 'uSampler', 'uUseTextures', 'uUseLighting', 'uAmbientColor', 'uPointLightingLocation', 'uPointLightingSpecularColor', 'uPointLightingDiffuseColor', 'uMaterialShininess', 'uShowSpecularHighlights'];
 
-    currentProgram = new GlProgram(
-        '''
+    currentProgram = new GlProgram('''
           precision mediump float;
           
           varying vec2 vTextureCoord;
@@ -92,8 +89,7 @@ class Lesson14 extends Lesson {
               }
               gl_FragColor = vec4(fragmentColor.rgb * lightWeighting, fragmentColor.a);
           }
-        ''',
-        '''
+        ''', '''
           attribute vec3 aVertexPosition;
           attribute vec3 aVertexNormal;
           attribute vec2 aTextureCoord;
@@ -147,21 +143,21 @@ class Lesson14 extends Lesson {
   }
 
   get aVertexPosition => currentProgram.attributes["aVertexPosition"];
-  get aVertexNormal  => currentProgram.attributes["aVertexNormal"];
-  get aTextureCoord  => currentProgram.attributes["aTextureCoord"];
+  get aVertexNormal => currentProgram.attributes["aVertexNormal"];
+  get aTextureCoord => currentProgram.attributes["aTextureCoord"];
 
   get uShowSpecularHighlights => currentProgram.uniforms["uShowSpecularHighlights"];
   get uMaterialShininess => currentProgram.uniforms["uMaterialShininess"];
-  get uPMatrix  => currentProgram.uniforms["uPMatrix"];
-  get uMVMatrix  => currentProgram.uniforms["uMVMatrix"];
-  get uNMatrix  => currentProgram.uniforms["uNMatrix"];
+  get uPMatrix => currentProgram.uniforms["uPMatrix"];
+  get uMVMatrix => currentProgram.uniforms["uMVMatrix"];
+  get uNMatrix => currentProgram.uniforms["uNMatrix"];
   get uSampler => currentProgram.uniforms["uSampler"];
   get uUseTextures => currentProgram.uniforms["uUseTextures"];
   get uUseLighting => currentProgram.uniforms["uUseLighting"];
   get uAmbientColor => currentProgram.uniforms["uAmbientColor"];
-  get uPointLightingLocation  => currentProgram.uniforms["uPointLightingLocation"];
-  get uPointLightingSpecularColor  => currentProgram.uniforms["uPointLightingSpecularColor"];
-  get uPointLightingDiffuseColor  => currentProgram.uniforms["uPointLightingDiffuseColor"];
+  get uPointLightingLocation => currentProgram.uniforms["uPointLightingLocation"];
+  get uPointLightingSpecularColor => currentProgram.uniforms["uPointLightingSpecularColor"];
+  get uPointLightingDiffuseColor => currentProgram.uniforms["uPointLightingDiffuseColor"];
 
   void drawScene(num viewWidth, num viewHeight, num aspect) {
     if (!isLoaded) return;
@@ -181,17 +177,13 @@ class Lesson14 extends Lesson {
     bool lighting = _lighting.checked;
     gl.uniform1i(uUseLighting, lighting ? 1 : 0);
     if (lighting) {
-      gl.uniform3f(uAmbientColor, double.parse(_aR.value),
-          double.parse(_aG.value), double.parse(_aB.value));
+      gl.uniform3f(uAmbientColor, double.parse(_aR.value), double.parse(_aG.value), double.parse(_aB.value));
 
-      gl.uniform3f(uPointLightingLocation, double.parse(_lpX.value),
-          double.parse(_lpY.value), double.parse(_lpZ.value));
+      gl.uniform3f(uPointLightingLocation, double.parse(_lpX.value), double.parse(_lpY.value), double.parse(_lpZ.value));
 
-      gl.uniform3f(uPointLightingSpecularColor, double.parse(_sR.value),
-          double.parse(_sG.value), double.parse(_sB.value));
+      gl.uniform3f(uPointLightingSpecularColor, double.parse(_sR.value), double.parse(_sG.value), double.parse(_sB.value));
 
-      gl.uniform3f(uPointLightingDiffuseColor, double.parse(_dR.value),
-          double.parse(_dG.value), double.parse(_dB.value));
+      gl.uniform3f(uPointLightingDiffuseColor, double.parse(_dR.value), double.parse(_dG.value), double.parse(_dB.value));
     }
 
     var texture = _texture.value;
@@ -199,10 +191,10 @@ class Lesson14 extends Lesson {
 
     mvPushMatrix();
 
-    mvMatrix..
-        translate([0.0, 0.0, -40.0])..
-        rotate(radians(tilt), [1, 0, -1])..
-        rotateY(radians(teapotAngle));
+    mvMatrix
+        ..translate([0.0, 0.0, -40.0])
+        ..rotate(radians(tilt), [1, 0, -1])
+        ..rotateY(radians(teapotAngle));
 
     gl.activeTexture(TEXTURE0);
     if (texture == "earth") {
@@ -214,11 +206,9 @@ class Lesson14 extends Lesson {
     }
     gl.uniform1i(uSampler, 0);
 
-    gl.uniform1f(uMaterialShininess,
-        double.parse(_shininess.value));
+    gl.uniform1f(uMaterialShininess, double.parse(_shininess.value));
 
-    teapot.draw(vertex: aVertexPosition, normal: aVertexNormal,
-        coord: aTextureCoord, setUniforms: setMatrixUniforms);
+    teapot.draw(vertex: aVertexPosition, normal: aVertexNormal, coord: aTextureCoord, setUniforms: setMatrixUniforms);
     mvPopMatrix();
   }
 
@@ -233,31 +223,43 @@ class Lesson14 extends Lesson {
   void animate(num now) {
     if (lastTime != 0) {
       var elapsed = now - lastTime;
-      teapotAngle  += 0.05 * elapsed;
+      teapotAngle += 0.05 * elapsed;
     }
     lastTime = now;
   }
 
   void handleKeys() {
-    handleDirection(
-        up: () => tilt -= 1.0,
-        down: () => tilt += 1.0,
-        left: () => teapotAngle -= 1.0,
-        right: () => teapotAngle += 1.0);
+    handleDirection(up: () => tilt -= 1.0, down: () => tilt += 1.0, left: () => teapotAngle -= 1.0, right: () => teapotAngle += 1.0);
   }
 
   // Lighting enabled / Ambient color
-  InputElement _lighting, _aR, _aG, _aB;
+  InputElement _lighting;
+  // Lighting enabled / Ambient color
+  InputElement _aR;
+  // Lighting enabled / Ambient color
+  InputElement _aG;
+  // Lighting enabled / Ambient color
+  InputElement _aB;
 
   // Light position
-  InputElement _lpX, _lpY, _lpZ;
+  InputElement _lpX;
+  // Light position
+  InputElement _lpY;
+  // Light position
+  InputElement _lpZ;
 
   // Difuse color
-  InputElement _dR, _dG, _dB;
+  InputElement _dR;
+  // Difuse color
+  InputElement _dG;
+  // Difuse color
+  InputElement _dB;
 
   // Specular color
   InputElement _specular;
-  InputElement _sR, _sG, _sB;
+  InputElement _sR;
+  InputElement _sG;
+  InputElement _sB;
 
   InputElement _shininess;
   SelectElement _texture;

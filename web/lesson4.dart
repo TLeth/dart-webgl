@@ -25,7 +25,8 @@ class Lesson4 extends Lesson {
   Pyramid pyramid = new Pyramid();
   Cube cube = new Cube();
 
-  num rPyramid = 0.0, rCube = 0.0;
+  num rPyramid = 0.0;
+  num rCube = 0.0;
 
   Lesson4() {
     program = new GlProgram('''
@@ -36,7 +37,7 @@ class Lesson4 extends Lesson {
           void main(void) {
             gl_FragColor = vColor;
           }
-        ''','''
+        ''', '''
           attribute vec3 aVertexPosition;
           attribute vec4 aVertexColor;
 
@@ -80,22 +81,17 @@ class Lesson4 extends Lesson {
     mvMatrix.translate([-1.5, 0.0, -8.0]);
 
     // Let the user play around with some directional changes.
-    mvMatrix.rotateX(radians(x))..
-        rotateY(radians(y));
+    mvMatrix.rotateX(radians(x))..rotateY(radians(y));
 
     mvPushMatrix();
-    mvMatrix.rotate(radians(rPyramid), [0,1,0]);
-    pyramid.draw(setUniforms: setMatrixUniforms,
-        vertex: program.attributes['aVertexPosition'],
-        color: program.attributes['aVertexColor']);
+    mvMatrix.rotate(radians(rPyramid), [0, 1, 0]);
+    pyramid.draw(setUniforms: setMatrixUniforms, vertex: program.attributes['aVertexPosition'], color: program.attributes['aVertexColor']);
     mvPopMatrix();
 
     // Move 3 units to the right
     mvMatrix.translate([3.0, 0.0, 0.0]);
-    mvMatrix.rotate(radians(rCube), [1,1,1]);
-    cube.draw(setUniforms: setMatrixUniforms,
-        vertex: program.attributes['aVertexPosition'],
-        color: program.attributes['aVertexColor']);
+    mvMatrix.rotate(radians(rCube), [1, 1, 1]);
+    cube.draw(setUniforms: setMatrixUniforms, vertex: program.attributes['aVertexPosition'], color: program.attributes['aVertexColor']);
 
     // Finally, reset the matrix back to what it was before we moved around.
     mvPopMatrix();
@@ -124,12 +120,10 @@ class Lesson4 extends Lesson {
     lastTime = now;
   }
 
-  num x = 0.0, y = 0.0, z = 0.0;
+  num x = 0.0;
+  num y = 0.0;
+  num z = 0.0;
   void handleKeys() {
-    handleDirection(
-        up: () => y -= 0.5,
-        down: () => y += 0.5,
-        left: () => x -= 0.5,
-        right: () => x += 0.5);
+    handleDirection(up: () => y -= 0.5, down: () => y += 0.5, left: () => x -= 0.5, right: () => x += 0.5);
   }
 }

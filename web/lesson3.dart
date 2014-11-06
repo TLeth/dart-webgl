@@ -22,10 +22,13 @@ part of learn_gl;
 class Lesson3 extends Lesson {
   GlProgram program;
 
-  Buffer triangleVertexPositionBuffer, squareVertexPositionBuffer;
-  Buffer triangleVertexColorBuffer, squareVertexColorBuffer;
+  Buffer triangleVertexPositionBuffer;
+  Buffer squareVertexPositionBuffer;
+  Buffer triangleVertexColorBuffer;
+  Buffer squareVertexColorBuffer;
 
-  num rTriangle = 0.0, rSquare = 0.0;
+  num rTriangle = 0.0;
+  num rSquare = 0.0;
 
   Lesson3() {
     program = new GlProgram('''
@@ -36,7 +39,7 @@ class Lesson3 extends Lesson {
           void main(void) {
             gl_FragColor = vColor;
           }
-        ''','''
+        ''', '''
           attribute vec3 aVertexPosition;
           attribute vec4 aVertexColor;
 
@@ -58,38 +61,20 @@ class Lesson3 extends Lesson {
 
     // bindBuffer() tells the WebGL system the target of future calls
     gl.bindBuffer(ARRAY_BUFFER, triangleVertexPositionBuffer);
-    gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList([
-           0.0,  1.0,  0.0,
-          -1.0, -1.0,  0.0,
-           1.0, -1.0,  0.0
-        ]), STATIC_DRAW);
+    gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList([0.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0]), STATIC_DRAW);
 
     triangleVertexColorBuffer = gl.createBuffer();
     gl.bindBuffer(ARRAY_BUFFER, triangleVertexColorBuffer);
-    var colors = [
-      1.0, 0.0, 0.0, 1.0,
-      0.0, 1.0, 0.0, 1.0,
-      0.0, 0.0, 1.0, 1.0
-    ];
+    var colors = [1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0];
     gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList(colors), STATIC_DRAW);
 
     squareVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(ARRAY_BUFFER, squareVertexPositionBuffer);
-    gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList([
-           1.0,  1.0,  0.0,
-          -1.0,  1.0,  0.0,
-           1.0, -1.0,  0.0,
-          -1.0, -1.0,  0.0
-        ]), STATIC_DRAW);
+    gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList([1.0, 1.0, 0.0, -1.0, 1.0, 0.0, 1.0, -1.0, 0.0, -1.0, -1.0, 0.0]), STATIC_DRAW);
 
     squareVertexColorBuffer = gl.createBuffer();
     gl.bindBuffer(ARRAY_BUFFER, squareVertexColorBuffer);
-    colors = [
-      0.5, 0.5, 1.0, 1.0,
-      0.5, 0.5, 1.0, 1.0,
-      0.5, 0.5, 1.0, 1.0,
-      0.5, 0.5, 1.0, 1.0
-    ];
+    colors = [0.5, 0.5, 1.0, 1.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, 1.0, 1.0, 0.5, 0.5, 1.0, 1.0];
     gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList(colors), STATIC_DRAW);
 
     // Specify the color to clear with (black with 100% alpha) and then enable

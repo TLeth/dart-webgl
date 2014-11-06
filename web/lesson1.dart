@@ -20,7 +20,8 @@ part of learn_gl;
 class Lesson1 extends Lesson {
   GlProgram program;
 
-  Buffer triangleVertexPositionBuffer, squareVertexPositionBuffer;
+  Buffer triangleVertexPositionBuffer;
+  Buffer squareVertexPositionBuffer;
 
   Lesson1() {
     program = new GlProgram('''
@@ -29,7 +30,7 @@ class Lesson1 extends Lesson {
           void main(void) {
               gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
           }
-        ''','''
+        ''', '''
           attribute vec3 aVertexPosition;
 
           uniform mat4 uMVMatrix;
@@ -47,20 +48,11 @@ class Lesson1 extends Lesson {
 
     // bindBuffer() tells the WebGL system the target of future calls
     gl.bindBuffer(ARRAY_BUFFER, triangleVertexPositionBuffer);
-    gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList([
-           0.0,  1.0,  0.0,
-          -1.0, -1.0,  0.0,
-           1.0, -1.0,  0.0
-        ]), STATIC_DRAW);
+    gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList([0.0, 1.0, 0.0, -1.0, -1.0, 0.0, 1.0, -1.0, 0.0]), STATIC_DRAW);
 
     squareVertexPositionBuffer = gl.createBuffer();
     gl.bindBuffer(ARRAY_BUFFER, squareVertexPositionBuffer);
-    gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList([
-           1.0,  1.0,  0.0,
-          -1.0,  1.0,  0.0,
-           1.0, -1.0,  0.0,
-          -1.0, -1.0,  0.0
-        ]), STATIC_DRAW);
+    gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList([1.0, 1.0, 0.0, -1.0, 1.0, 0.0, 1.0, -1.0, 0.0, -1.0, -1.0, 0.0]), STATIC_DRAW);
 
     // Specify the color to clear with (black with 100% alpha) and then enable
     // depth testing.

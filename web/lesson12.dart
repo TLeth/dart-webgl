@@ -27,7 +27,8 @@ class Lesson12 extends Lesson {
   GlProgram program;
   Cube cube;
   Sphere moon;
-  Texture moonTexture, cubeTexture;
+  Texture moonTexture;
+  Texture cubeTexture;
 
   bool get isLoaded => moonTexture != null && cubeTexture != null;
 
@@ -36,11 +37,8 @@ class Lesson12 extends Lesson {
     cube = new Cube();
 
     var attributes = ['aVertexPosition', 'aVertexNormal', 'aTextureCoord'];
-    var uniforms = ['uSampler', 'uMVMatrix', 'uPMatrix', 'uNMatrix',
-                    'uAmbientColor', 'uPointLightingLocation',
-                    'uPointLightingColor', 'uUseLighting'];
-    program = new GlProgram(
-        '''
+    var uniforms = ['uSampler', 'uMVMatrix', 'uPMatrix', 'uNMatrix', 'uAmbientColor', 'uPointLightingLocation', 'uPointLightingColor', 'uUseLighting'];
+    program = new GlProgram('''
           precision mediump float;
 
           varying vec2 vTextureCoord;
@@ -52,8 +50,7 @@ class Lesson12 extends Lesson {
               vec4 textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
               gl_FragColor = vec4(textureColor.rgb * vLightWeighting, textureColor.a);
           }
-        ''',
-        '''
+        ''', '''
           attribute vec3 aVertexPosition;
           attribute vec3 aVertexNormal;
           attribute vec2 aTextureCoord;
@@ -125,21 +122,19 @@ class Lesson12 extends Lesson {
     bool lighting = _lighting.checked;
     gl.uniform1i(uUseLighting, lighting ? 1 : 0);
     if (lighting) {
-      gl.uniform3f(uAmbientColor, double.parse(_aR.value),
-          double.parse(_aG.value), double.parse(_aB.value));
+      gl.uniform3f(uAmbientColor, double.parse(_aR.value), double.parse(_aG.value), double.parse(_aB.value));
 
-      gl.uniform3f(uPointLightingLocation, double.parse(_lpX.value),
-          double.parse(_lpY.value), double.parse(_lpZ.value));
+      gl.uniform3f(uPointLightingLocation, double.parse(_lpX.value), double.parse(_lpY.value), double.parse(_lpZ.value));
 
-      gl.uniform3f(uPointLightingColor, double.parse(_pR.value),
-          double.parse(_pG.value), double.parse(_pB.value));
+      gl.uniform3f(uPointLightingColor, double.parse(_pR.value), double.parse(_pG.value), double.parse(_pB.value));
     }
 
     mvPushMatrix();
 
     // Setup the scene -20.0 away.
-    mvMatrix..translate([0.0, 0.0, -20.0])..
-        rotateX(radians(tilt));
+    mvMatrix
+        ..translate([0.0, 0.0, -20.0])
+        ..rotateX(radians(tilt));
 
     mvPushMatrix();
     // Rotate and move away from the scene
@@ -149,8 +144,7 @@ class Lesson12 extends Lesson {
     gl.activeTexture(TEXTURE0);
     gl.bindTexture(TEXTURE_2D, moonTexture);
     gl.uniform1i(uSampler, 0);
-    moon.draw(vertex: aVertexPosition, normal: aVertexNormal,
-        coord: aTextureCoord, setUniforms: setMatrixUniforms);
+    moon.draw(vertex: aVertexPosition, normal: aVertexNormal, coord: aTextureCoord, setUniforms: setMatrixUniforms);
     mvPopMatrix();
 
     mvMatrix
@@ -159,8 +153,7 @@ class Lesson12 extends Lesson {
     gl.activeTexture(TEXTURE0);
     gl.bindTexture(TEXTURE_2D, cubeTexture);
     gl.uniform1i(uSampler, 0);
-    cube.draw(vertex: aVertexPosition, normal: aVertexNormal,
-        coord: aTextureCoord, setUniforms: setMatrixUniforms);
+    cube.draw(vertex: aVertexPosition, normal: aVertexNormal, coord: aTextureCoord, setUniforms: setMatrixUniforms);
     mvPopMatrix();
   }
 
@@ -186,24 +179,30 @@ class Lesson12 extends Lesson {
   }
 
   void handleKeys() {
-    handleDirection(
-        up: () => tilt -= 1.0,
-        down: () => tilt += 1.0,
-        left: () {
-          moonAngle -= 1.0;
-          cubeAngle -= 1.0;
-        },
-        right: () {
-          moonAngle += 1.0;
-          cubeAngle += 1.0;
-        });
+    handleDirection(up: () => tilt -= 1.0, down: () => tilt += 1.0, left: () {
+      moonAngle -= 1.0;
+      cubeAngle -= 1.0;
+    }, right: () {
+      moonAngle += 1.0;
+      cubeAngle += 1.0;
+    });
   }
 
   // Lighting enabled / Ambient color
-  InputElement _lighting, _aR, _aG, _aB;
+  InputElement _lighting;
+  // Lighting enabled / Ambient color
+  InputElement _aR;
+  // Lighting enabled / Ambient color
+  InputElement _aG;
+  // Lighting enabled / Ambient color
+  InputElement _aB;
 
   // Light position
-  InputElement _lpX, _lpY, _lpZ;
+  InputElement _lpX;
+  // Light position
+  InputElement _lpY;
+  // Light position
+  InputElement _lpZ;
 
   // Point color
   InputElement _pR, _pG, _pB;

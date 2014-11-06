@@ -39,8 +39,7 @@ class Lesson5 extends Lesson {
     var attributes = ['aVertexPosition', 'aTextureCoord'];
     var uniforms = ['uPMatrix', 'uMVMatrix', 'uSampler'];
 
-    program = new GlProgram(
-        '''
+    program = new GlProgram('''
           precision mediump float;
 
           varying vec2 vTextureCoord;
@@ -50,8 +49,7 @@ class Lesson5 extends Lesson {
           void main(void) {
               gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
           }
-        ''',
-        '''
+        ''', '''
           attribute vec3 aVertexPosition;
           attribute vec2 aTextureCoord;
 
@@ -86,24 +84,23 @@ class Lesson5 extends Lesson {
     // First stash the current model view matrix before we start moving around.
     mvPushMatrix();
 
-    mvMatrix..translate([0.0, 0.0, -5.0])..
-        rotateX(radians(xRot))..
-        rotateY(radians(yRot))..
-        rotateZ(radians(zRot));
+    mvMatrix
+        ..translate([0.0, 0.0, -5.0])
+        ..rotateX(radians(xRot))
+        ..rotateY(radians(yRot))
+        ..rotateZ(radians(zRot));
 
     gl.activeTexture(TEXTURE0);
     gl.bindTexture(TEXTURE_2D, neheTexture);
     gl.uniform1i(uSampler, 0);
-    cube.draw(setUniforms: setMatrixUniforms,
-        vertex: program.attributes['aVertexPosition'],
-        coord: program.attributes['aTextureCoord'] );
+    cube.draw(setUniforms: setMatrixUniforms, vertex: program.attributes['aVertexPosition'], coord: program.attributes['aTextureCoord']);
 
     // Finally, reset the matrix back to what it was before we moved around.
     mvPopMatrix();
   }
 
-  get uPMatrix  => program.uniforms["uPMatrix"];
-  get uMVMatrix  => program.uniforms["uMVMatrix"];
+  get uPMatrix => program.uniforms["uPMatrix"];
+  get uMVMatrix => program.uniforms["uMVMatrix"];
   get uSampler => program.uniforms["uSampler"];
 
   void setMatrixUniforms() {
@@ -111,7 +108,9 @@ class Lesson5 extends Lesson {
     gl.uniformMatrix4fv(uMVMatrix, false, mvMatrix.buf);
   }
 
-  num xRot = 0.0, yRot = 0.0, zRot = 0.0;
+  num xRot = 0.0;
+  num yRot = 0.0;
+  num zRot = 0.0;
 
   void animate(num now) {
     if (lastTime != 0) {
@@ -125,10 +124,6 @@ class Lesson5 extends Lesson {
   }
 
   void handleKeys() {
-    handleDirection(
-        up: () => yRot -= 0.5,
-        down: () => yRot += 0.5,
-        left: () => xRot -= 0.5,
-        right: () => xRot += 0.5);
+    handleDirection(up: () => yRot -= 0.5, down: () => yRot += 0.5, left: () => xRot -= 0.5, right: () => xRot += 0.5);
   }
 }

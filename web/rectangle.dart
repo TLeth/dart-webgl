@@ -15,53 +15,40 @@
 part of learn_gl;
 
 class Rectangle implements Renderable {
-  Buffer positionBuffer,
-    normalBuffer,
-    textureCoordBuffer,
-    colorBuffer,
-    indexBuffer;
+  Buffer positionBuffer;
+  Buffer normalBuffer;
+  Buffer textureCoordBuffer;
+  Buffer colorBuffer;
+  Buffer indexBuffer;
 
-  static const List<num> WHITE_COLOR = const [
-    1.0, 1.0, 1.0, 1.0, // bottom left
+  static const List<num> WHITE_COLOR = const [1.0, 1.0, 1.0, 1.0, // bottom left
     1.0, 1.0, 1.0, 1.0, // bottom right
     1.0, 1.0, 1.0, 1.0, // top right
     1.0, 1.0, 1.0, 1.0, // top left
   ];
 
-  Rectangle(num width, num height, {num left: 0.0, num bottom: 0.0,
-    Float32List vertexColors}) {
+  Rectangle(num width, num height, {num left: 0.0, num bottom: 0.0, Float32List vertexColors}) {
     positionBuffer = gl.createBuffer();
     normalBuffer = gl.createBuffer();
     textureCoordBuffer = gl.createBuffer();
     colorBuffer = gl.createBuffer();
 
     gl.bindBuffer(ARRAY_BUFFER, positionBuffer);
-    var vertices = [
-      left,  bottom,  0.0,  // bottom left
-      left + width,  bottom,  0.0, // bottom right
-      left + width,  bottom + height,  0.0, // top right
-      left,  bottom + height,  0.0, // top left
+    var vertices = [left, bottom, 0.0, // bottom left
+      left + width, bottom, 0.0, // bottom right
+      left + width, bottom + height, 0.0, // top right
+      left, bottom + height, 0.0, // top left
     ];
     gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList(vertices), STATIC_DRAW);
 
     gl.bindBuffer(ARRAY_BUFFER, normalBuffer);
-    var vertexNormals = [
-      // Front face
-      0.0,  0.0,  1.0,
-      0.0,  0.0,  1.0,
-      0.0,  0.0,  1.0,
-      0.0,  0.0,  1.0,
-    ];
+    var vertexNormals = [// Front face
+      0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0,];
     gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList(vertexNormals), STATIC_DRAW);
 
     gl.bindBuffer(ARRAY_BUFFER, textureCoordBuffer);
-    var coords = [
-      // Front face
-      0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
-    ];
+    var coords = [// Front face
+      0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,];
     gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList(coords), STATIC_DRAW);
 
     // TODO: Come up with a better way to store color buffer vs texture buffer :)
@@ -92,9 +79,8 @@ class Rectangle implements Renderable {
 
     indexBuffer = gl.createBuffer();
     gl.bindBuffer(ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferDataTyped(ELEMENT_ARRAY_BUFFER, new Uint16List.fromList([
-         0, 1, 2,      0, 2, 3,    // Front face
-        ]), STATIC_DRAW);
+    gl.bufferDataTyped(ELEMENT_ARRAY_BUFFER, new Uint16List.fromList([0, 1, 2, 0, 2, 3, // Front face
+    ]), STATIC_DRAW);
 
   }
 

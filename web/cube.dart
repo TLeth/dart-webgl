@@ -16,148 +16,54 @@ part of learn_gl;
 
 class Cube implements Renderable {
 
-  Buffer positionBuffer,
-    normalBuffer,
-    textureCoordBuffer,
-    indexBuffer;
+  Buffer positionBuffer;
+  Buffer normalBuffer;
+  Buffer textureCoordBuffer;
+  Buffer indexBuffer;
 
   Cube() {
     positionBuffer = gl.createBuffer();
     gl.bindBuffer(ARRAY_BUFFER, positionBuffer);
-    var vertices = [
-      // Front face
-      -1.0, -1.0,  1.0,
-      1.0, -1.0,  1.0,
-      1.0,  1.0,  1.0,
-      -1.0,  1.0,  1.0,
-
-      // Back face
-      -1.0, -1.0, -1.0,
-      -1.0,  1.0, -1.0,
-      1.0,  1.0, -1.0,
-      1.0, -1.0, -1.0,
-
-      // Top face
-      -1.0,  1.0, -1.0,
-      -1.0,  1.0,  1.0,
-      1.0,  1.0,  1.0,
-      1.0,  1.0, -1.0,
-
-      // Bottom face
-      -1.0, -1.0, -1.0,
-      1.0, -1.0, -1.0,
-      1.0, -1.0,  1.0,
-      -1.0, -1.0,  1.0,
-
-      // Right face
-      1.0, -1.0, -1.0,
-      1.0,  1.0, -1.0,
-      1.0,  1.0,  1.0,
-      1.0, -1.0,  1.0,
-
-      // Left face
-      -1.0, -1.0, -1.0,
-      -1.0, -1.0,  1.0,
-      -1.0,  1.0,  1.0,
-      -1.0,  1.0, -1.0
-    ];
-    gl.bufferDataTyped(ARRAY_BUFFER,
-        new Float32List.fromList(vertices), STATIC_DRAW);
+    var vertices = [// Front face
+      -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, 1.0, // Back face
+      -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0, -1.0, // Top face
+      -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, -1.0, // Bottom face
+      -1.0, -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, // Right face
+      1.0, -1.0, -1.0, 1.0, 1.0, -1.0, 1.0, 1.0, 1.0, 1.0, -1.0, 1.0, // Left face
+      -1.0, -1.0, -1.0, -1.0, -1.0, 1.0, -1.0, 1.0, 1.0, -1.0, 1.0, -1.0];
+    gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList(vertices), STATIC_DRAW);
 
     normalBuffer = gl.createBuffer();
     gl.bindBuffer(ARRAY_BUFFER, normalBuffer);
-    var vertexNormals = [
-      // Front face
-      0.0,  0.0,  1.0,
-      0.0,  0.0,  1.0,
-      0.0,  0.0,  1.0,
-      0.0,  0.0,  1.0,
-
-      // Back face
-      0.0,  0.0, -1.0,
-      0.0,  0.0, -1.0,
-      0.0,  0.0, -1.0,
-      0.0,  0.0, -1.0,
-
-      // Top face
-      0.0,  1.0,  0.0,
-      0.0,  1.0,  0.0,
-      0.0,  1.0,  0.0,
-      0.0,  1.0,  0.0,
-
-      // Bottom face
-      0.0, -1.0,  0.0,
-      0.0, -1.0,  0.0,
-      0.0, -1.0,  0.0,
-      0.0, -1.0,  0.0,
-
-      // Right face
-      1.0,  0.0,  0.0,
-      1.0,  0.0,  0.0,
-      1.0,  0.0,  0.0,
-      1.0,  0.0,  0.0,
-
-      // Left face
-      -1.0,  0.0,  0.0,
-      -1.0,  0.0,  0.0,
-      -1.0,  0.0,  0.0,
-      -1.0,  0.0,  0.0,
-    ];
-    gl.bufferDataTyped(ARRAY_BUFFER,
-        new Float32List.fromList(vertexNormals), STATIC_DRAW);
+    var vertexNormals = [// Front face
+      0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, // Back face
+      0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, // Top face
+      0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, // Bottom face
+      0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, // Right face
+      1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 0.0, // Left face
+      -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, 0.0,];
+    gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList(vertexNormals), STATIC_DRAW);
 
     textureCoordBuffer = gl.createBuffer();
     gl.bindBuffer(ARRAY_BUFFER, textureCoordBuffer);
-    var textureCoords = [
-      // Front face
-      0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
-
-      // Back face
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
-      0.0, 0.0,
-
-      // Top face
-      0.0, 1.0,
-      0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
-
-      // Bottom face
-      1.0, 1.0,
-      0.0, 1.0,
-      0.0, 0.0,
-      1.0, 0.0,
-
-      // Right face
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
-      0.0, 0.0,
-
-      // Left face
-      0.0, 0.0,
-      1.0, 0.0,
-      1.0, 1.0,
-      0.0, 1.0,
-    ];
-    gl.bufferDataTyped(ARRAY_BUFFER,
-        new Float32List.fromList(textureCoords), STATIC_DRAW);
+    var textureCoords = [// Front face
+      0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0, // Back face
+      1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, // Top face
+      0.0, 1.0, 0.0, 0.0, 1.0, 0.0, 1.0, 1.0, // Bottom face
+      1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, // Right face
+      1.0, 0.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, // Left face
+      0.0, 0.0, 1.0, 0.0, 1.0, 1.0, 0.0, 1.0,];
+    gl.bufferDataTyped(ARRAY_BUFFER, new Float32List.fromList(textureCoords), STATIC_DRAW);
 
     indexBuffer = gl.createBuffer();
     gl.bindBuffer(ELEMENT_ARRAY_BUFFER, indexBuffer);
-    gl.bufferDataTyped(ELEMENT_ARRAY_BUFFER, new Uint16List.fromList([
-         0, 1, 2,      0, 2, 3,    // Front face
-         4, 5, 6,      4, 6, 7,    // Back face
-         8, 9, 10,     8, 10, 11,  // Top face
-        12, 13, 14,   12, 14, 15, // Bottom face
-        16, 17, 18,   16, 18, 19, // Right face
-        20, 21, 22,   20, 22, 23  // Left face
-        ]), STATIC_DRAW);
+    gl.bufferDataTyped(ELEMENT_ARRAY_BUFFER, new Uint16List.fromList([0, 1, 2, 0, 2, 3, // Front face
+      4, 5, 6, 4, 6, 7, // Back face
+      8, 9, 10, 8, 10, 11, // Top face
+      12, 13, 14, 12, 14, 15, // Bottom face
+      16, 17, 18, 16, 18, 19, // Right face
+      20, 21, 22, 20, 22, 23 // Left face
+    ]), STATIC_DRAW);
   }
 
   void draw({int vertex, int normal, int coord, int color, setUniforms()}) {
@@ -202,17 +108,16 @@ class CubeColor {
     colorBuffer = gl.createBuffer();
     gl.bindBuffer(ARRAY_BUFFER, colorBuffer);
     /// HARD CODED :'(
-    List<List<double>> colors = [
-      [1.0, 0.0, 0.0, 1.0], // Front face
+    List<List<double>> colors = [[1.0, 0.0, 0.0, 1.0], // Front face
       [1.0, 1.0, 0.0, 1.0], // Back face
       [0.0, 1.0, 0.0, 1.0], // Top face
       [1.0, 0.5, 0.5, 1.0], // Bottom face
       [1.0, 0.0, 1.0, 1.0], // Right face
-      [0.0, 0.0, 1.0, 1.0]  // Left face
+      [0.0, 0.0, 1.0, 1.0] // Left face
     ];
     var unpackedColors = new List<double>();
     for (var i in colors) {
-      for (var j=0; j < 4; j++) {
+      for (var j = 0; j < 4; j++) {
         unpackedColors.addAll(i);
       }
     }

@@ -74,16 +74,9 @@ class Lesson16 extends Lesson {
     laptopScreen = new JsonObject(laptopScreenJson)..strip = true;
 
     var attributes = ['aVertexPosition', 'aVertexNormal', 'aTextureCoord'];
-    var uniforms = ['uPMatrix', 'uMVMatrix', 'uNMatrix',  'uUseTextures',
-                    'uMaterialAmbientColor', 'uMaterialDiffuseColor',
-                    'uMaterialSpecularColor', 'uMaterialShininess',
-                    'uMaterialEmissiveColor', 'uPointLightingDiffuseColor',
-                    'uPointLightingLocation', 'uPointLightingSpecularColor',
-                    'uShowSpecularHighlights', 'uSampler',
-                    'uAmbientLightingColor'];
+    var uniforms = ['uPMatrix', 'uMVMatrix', 'uNMatrix', 'uUseTextures', 'uMaterialAmbientColor', 'uMaterialDiffuseColor', 'uMaterialSpecularColor', 'uMaterialShininess', 'uMaterialEmissiveColor', 'uPointLightingDiffuseColor', 'uPointLightingLocation', 'uPointLightingSpecularColor', 'uShowSpecularHighlights', 'uSampler', 'uAmbientLightingColor'];
 
-    currentProgram = new GlProgram(
-        '''
+    currentProgram = new GlProgram('''
           precision mediump float;
       
           varying vec2 vTextureCoord;
@@ -146,8 +139,7 @@ class Lesson16 extends Lesson {
                   alpha
               );
           }
-        ''',
-        '''
+        ''', '''
           attribute vec3 aVertexPosition;
           attribute vec3 aVertexNormal;
           attribute vec2 aTextureCoord;
@@ -180,18 +172,14 @@ class Lesson16 extends Lesson {
     gl.texParameteri(TEXTURE_2D, TEXTURE_MIN_FILTER, LINEAR_MIPMAP_NEAREST);
     gl.generateMipmap(TEXTURE_2D);
 
-    gl.texImage2DTyped(TEXTURE_2D, 0, RGBA, rttWidth, rttHeight, 0, RGBA,
-        UNSIGNED_BYTE, null);
+    gl.texImage2DTyped(TEXTURE_2D, 0, RGBA, rttWidth, rttHeight, 0, RGBA, UNSIGNED_BYTE, null);
 
     renderbuffer = gl.createRenderbuffer();
     gl.bindRenderbuffer(RENDERBUFFER, renderbuffer);
-    gl.renderbufferStorage(RENDERBUFFER, DEPTH_COMPONENT16,
-        rttWidth, rttHeight);
+    gl.renderbufferStorage(RENDERBUFFER, DEPTH_COMPONENT16, rttWidth, rttHeight);
 
-    gl.framebufferTexture2D(FRAMEBUFFER, COLOR_ATTACHMENT0, TEXTURE_2D,
-        rttTexture, 0);
-    gl.framebufferRenderbuffer(FRAMEBUFFER, DEPTH_ATTACHMENT, RENDERBUFFER,
-        renderbuffer);
+    gl.framebufferTexture2D(FRAMEBUFFER, COLOR_ATTACHMENT0, TEXTURE_2D, rttTexture, 0);
+    gl.framebufferRenderbuffer(FRAMEBUFFER, DEPTH_ATTACHMENT, RENDERBUFFER, renderbuffer);
 
     gl.bindTexture(TEXTURE_2D, null);
     gl.bindRenderbuffer(RENDERBUFFER, null);
@@ -205,22 +193,22 @@ class Lesson16 extends Lesson {
   static const rttHeight = 512;
 
   get aVertexPosition => currentProgram.attributes["aVertexPosition"];
-  get aVertexNormal  => currentProgram.attributes["aVertexNormal"];
-  get aTextureCoord  => currentProgram.attributes["aTextureCoord"];
+  get aVertexNormal => currentProgram.attributes["aVertexNormal"];
+  get aTextureCoord => currentProgram.attributes["aTextureCoord"];
 
   get uShowSpecularHighlights => currentProgram.uniforms["uShowSpecularHighlights"];
   get uMaterialShininess => currentProgram.uniforms["uMaterialShininess"];
 
-  get uPMatrix  => currentProgram.uniforms["uPMatrix"];
-  get uMVMatrix  => currentProgram.uniforms["uMVMatrix"];
-  get uNMatrix  => currentProgram.uniforms["uNMatrix"];
+  get uPMatrix => currentProgram.uniforms["uPMatrix"];
+  get uMVMatrix => currentProgram.uniforms["uMVMatrix"];
+  get uNMatrix => currentProgram.uniforms["uNMatrix"];
   get uSampler => currentProgram.uniforms["uSampler"];
   get uUseTextures => currentProgram.uniforms["uUseTextures"];
   get uUseLighting => currentProgram.uniforms["uUseLighting"];
   get uAmbientColor => currentProgram.uniforms["uAmbientColor"];
-  get uPointLightingLocation  => currentProgram.uniforms["uPointLightingLocation"];
-  get uPointLightingSpecularColor  => currentProgram.uniforms["uPointLightingSpecularColor"];
-  get uPointLightingDiffuseColor  => currentProgram.uniforms["uPointLightingDiffuseColor"];
+  get uPointLightingLocation => currentProgram.uniforms["uPointLightingLocation"];
+  get uPointLightingSpecularColor => currentProgram.uniforms["uPointLightingSpecularColor"];
+  get uPointLightingDiffuseColor => currentProgram.uniforms["uPointLightingDiffuseColor"];
 
   get uAmbientLightingColor => currentProgram.uniforms["uAmbientLightingColor"];
   get uMaterialAmbientColor => currentProgram.uniforms["uMaterialAmbientColor"];
@@ -256,10 +244,10 @@ class Lesson16 extends Lesson {
 
     mvPushMatrix();
 
-    mvMatrix..
-        translate([0.0, -0.4, -2.2])..
-        rotateY(radians(laptopAngle))..
-        rotateX(radians(-90.0));
+    mvMatrix
+        ..translate([0.0, -0.4, -2.2])
+        ..rotateY(radians(laptopAngle))
+        ..rotateX(radians(-90.0));
 
     /*
      * Draw the laptop first with the following parameters
@@ -281,8 +269,7 @@ class Lesson16 extends Lesson {
     gl.uniform3f(uMaterialEmissiveColor, 0.0, 0.0, 0.0);
     gl.uniform1i(uUseTextures, 0);
 
-    laptop.draw(vertex: aVertexPosition, normal: aVertexNormal,
-        coord: aTextureCoord, setUniforms: setMatrixUniforms);
+    laptop.draw(vertex: aVertexPosition, normal: aVertexNormal, coord: aTextureCoord, setUniforms: setMatrixUniforms);
 
     /*
      * Now draw the laptop screen with different lighting parameters.
@@ -298,8 +285,7 @@ class Lesson16 extends Lesson {
     gl.activeTexture(TEXTURE0);
     gl.bindTexture(TEXTURE_2D, rttTexture);
     gl.uniform1i(uSampler, 0);
-    laptopScreen.draw(vertex: aVertexPosition, normal: aVertexNormal,
-        coord: aTextureCoord, setUniforms: setMatrixUniforms);
+    laptopScreen.draw(vertex: aVertexPosition, normal: aVertexNormal, coord: aTextureCoord, setUniforms: setMatrixUniforms);
 
     mvPopMatrix();
   }

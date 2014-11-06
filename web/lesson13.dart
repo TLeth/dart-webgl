@@ -32,7 +32,8 @@ class Lesson13 extends Lesson {
 
   GlProgram currentProgram;
 
-  Texture moonTexture, cubeTexture;
+  Texture moonTexture;
+  Texture cubeTexture;
   bool get isLoaded => moonTexture != null && cubeTexture != null;
 
   Lesson13() {
@@ -40,12 +41,9 @@ class Lesson13 extends Lesson {
     cube = new Cube();
 
     var attributes = ['aVertexPosition', 'aVertexNormal', 'aTextureCoord'];
-    var uniforms = ['uPMatrix', 'uMVMatrix', 'uNMatrix', 'uSampler',
-                    'uUseTextures', 'uUseLighting', 'uAmbientColor',
-                    'uPointLightingLocation', 'uPointLightingColor'];
+    var uniforms = ['uPMatrix', 'uMVMatrix', 'uNMatrix', 'uSampler', 'uUseTextures', 'uUseLighting', 'uAmbientColor', 'uPointLightingLocation', 'uPointLightingColor'];
 
-    perVertexProgram = new GlProgram(
-      '''
+    perVertexProgram = new GlProgram('''
         precision mediump float;
     
         varying vec2 vTextureCoord;
@@ -64,8 +62,7 @@ class Lesson13 extends Lesson {
             }
             gl_FragColor = vec4(fragmentColor.rgb * vLightWeighting, fragmentColor.a);
         }
-      ''',
-      '''
+      ''', '''
         attribute vec3 aVertexPosition;
         attribute vec3 aVertexNormal;
         attribute vec2 aTextureCoord;
@@ -101,8 +98,7 @@ class Lesson13 extends Lesson {
         }
       ''', attributes, uniforms);
 
-    currentProgram = perFragmentProgram = new GlProgram(
-        '''
+    currentProgram = perFragmentProgram = new GlProgram('''
           precision mediump float;
       
           varying vec2 vTextureCoord;
@@ -139,8 +135,7 @@ class Lesson13 extends Lesson {
               }
               gl_FragColor = vec4(fragmentColor.rgb * lightWeighting, fragmentColor.a);
           }
-        ''',
-        '''
+        ''', '''
           attribute vec3 aVertexPosition;
           attribute vec3 aVertexNormal;
           attribute vec2 aTextureCoord;
@@ -170,8 +165,8 @@ class Lesson13 extends Lesson {
   }
 
   get aVertexPosition => currentProgram.attributes["aVertexPosition"];
-  get aVertexNormal  => currentProgram.attributes["aVertexNormal"];
-  get aTextureCoord  => currentProgram.attributes["aTextureCoord"];
+  get aVertexNormal => currentProgram.attributes["aVertexNormal"];
+  get aTextureCoord => currentProgram.attributes["aTextureCoord"];
 
   get uPMatrix => currentProgram.uniforms["uPMatrix"];
   get uMVMatrix => currentProgram.uniforms["uMVMatrix"];
@@ -205,23 +200,20 @@ class Lesson13 extends Lesson {
     bool lighting = _lighting.checked;
     gl.uniform1i(uUseLighting, lighting ? 1 : 0);
     if (lighting) {
-      gl.uniform3f(uAmbientColor, double.parse(_aR.value),
-          double.parse(_aG.value), double.parse(_aB.value));
+      gl.uniform3f(uAmbientColor, double.parse(_aR.value), double.parse(_aG.value), double.parse(_aB.value));
 
-      gl.uniform3f(uPointLightingLocation, double.parse(_lpX.value),
-          double.parse(_lpY.value), double.parse(_lpZ.value));
+      gl.uniform3f(uPointLightingLocation, double.parse(_lpX.value), double.parse(_lpY.value), double.parse(_lpZ.value));
 
-      gl.uniform3f(uPointLightingColor, double.parse(_pR.value),
-          double.parse(_pG.value), double.parse(_pB.value));
+      gl.uniform3f(uPointLightingColor, double.parse(_pR.value), double.parse(_pG.value), double.parse(_pB.value));
     }
     gl.uniform1i(uUseTextures, _textures.checked ? 1 : 0);
 
     mvPushMatrix();
 
     // Setup the scene -5.0 away and pitch up by 30 degrees
-    mvMatrix..
-        translate([0.0, 0.0, -5.0])..
-        rotateX(radians(tilt));
+    mvMatrix
+        ..translate([0.0, 0.0, -5.0])
+        ..rotateX(radians(tilt));
 
     mvPushMatrix();
     // Rotate and move away from the scene
@@ -231,8 +223,7 @@ class Lesson13 extends Lesson {
     gl.activeTexture(TEXTURE0);
     gl.bindTexture(TEXTURE_2D, moonTexture);
     gl.uniform1i(uSampler, 0);
-    moon.draw(vertex: aVertexPosition, normal: aVertexNormal,
-        coord: aTextureCoord, setUniforms: setMatrixUniforms);
+    moon.draw(vertex: aVertexPosition, normal: aVertexNormal, coord: aTextureCoord, setUniforms: setMatrixUniforms);
     mvPopMatrix();
 
     mvMatrix
@@ -241,8 +232,7 @@ class Lesson13 extends Lesson {
     gl.activeTexture(TEXTURE0);
     gl.bindTexture(TEXTURE_2D, cubeTexture);
     gl.uniform1i(uSampler, 0);
-    cube.draw(vertex: aVertexPosition, normal: aVertexNormal,
-        coord: aTextureCoord, setUniforms: setMatrixUniforms);
+    cube.draw(vertex: aVertexPosition, normal: aVertexNormal, coord: aTextureCoord, setUniforms: setMatrixUniforms);
     mvPopMatrix();
   }
 
@@ -268,27 +258,33 @@ class Lesson13 extends Lesson {
   }
 
   void handleKeys() {
-    handleDirection(
-        up: () => tilt -= 1.0,
-        down: () => tilt += 1.0,
-        left: () {
-          moonAngle -= 1.0;
-          cubeAngle -= 1.0;
-        },
-        right: () {
-          moonAngle += 1.0;
-          cubeAngle += 1.0;
-        });
+    handleDirection(up: () => tilt -= 1.0, down: () => tilt += 1.0, left: () {
+      moonAngle -= 1.0;
+      cubeAngle -= 1.0;
+    }, right: () {
+      moonAngle += 1.0;
+      cubeAngle += 1.0;
+    });
   }
 
   InputElement _perFragment;
   InputElement _textures;
 
   // Lighting enabled / Ambient color
-  InputElement _lighting, _aR, _aG, _aB;
+  InputElement _lighting;
+  // Lighting enabled / Ambient color
+  InputElement _aR;
+  // Lighting enabled / Ambient color
+  InputElement _aG;
+  // Lighting enabled / Ambient color
+  InputElement _aB;
 
   // Light position
-  InputElement _lpX, _lpY, _lpZ;
+  InputElement _lpX;
+  // Light position
+  InputElement _lpY;
+  // Light position
+  InputElement _lpZ;
 
   // Point color
   InputElement _pR, _pG, _pB;

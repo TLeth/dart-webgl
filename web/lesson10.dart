@@ -31,7 +31,7 @@ class Lesson10 extends Lesson {
       print("world loaded with ${world._itemSize}");
     });
 
-    loadTexture("mcdole.gif" , (Texture texture, ImageElement ele) {
+    loadTexture("mcdole.gif", (Texture texture, ImageElement ele) {
       gl.pixelStorei(UNPACK_FLIP_Y_WEBGL, 1);
       gl.bindTexture(TEXTURE_2D, texture);
       gl.texImage2DImage(TEXTURE_2D, 0, RGBA, RGBA, UNSIGNED_BYTE, ele);
@@ -43,8 +43,7 @@ class Lesson10 extends Lesson {
 
     var attributes = ['aVertexPosition', 'aTextureCoord'];
     var uniforms = ['uMVMatrix', 'uPMatrix', 'uSampler'];
-    program = new GlProgram(
-        """
+    program = new GlProgram("""
           precision mediump float;
 
           varying vec2 vTextureCoord;
@@ -54,8 +53,7 @@ class Lesson10 extends Lesson {
           void main(void) {
               gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
           }
-        """,
-        """
+        """, """
           attribute vec3 aVertexPosition;
           attribute vec2 aTextureCoord;
 
@@ -96,10 +94,10 @@ class Lesson10 extends Lesson {
 
     mvPushMatrix();
 
-    mvMatrix..
-        rotateX(radians(-pitch))..
-        rotateY(radians(-yaw))..
-        translate([-xPos, -yPos, -zPos]);
+    mvMatrix
+        ..rotateX(radians(-pitch))
+        ..rotateY(radians(-yaw))
+        ..translate([-xPos, -yPos, -zPos]);
 
     gl.activeTexture(TEXTURE0);
     gl.bindTexture(TEXTURE_2D, texture);
@@ -113,9 +111,13 @@ class Lesson10 extends Lesson {
     mvPopMatrix();
   }
 
-  double pitch = 0.0, yaw = 0.0;
-  double pitchRate = 0.0, yawRate = 0.0;
-  double xPos = 0.0, yPos = 0.4, zPos = 0.0;
+  double pitch = 0.0;
+  double yaw = 0.0;
+  double pitchRate = 0.0;
+  double yawRate = 0.0;
+  double xPos = 0.0;
+  double yPos = 0.4;
+  double zPos = 0.0;
   double speed = 0.0;
 
   void animate(num now) {
